@@ -1,0 +1,25 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "salvo"
+version = "0.1.0"
+description = "A Python HTTP Pipelining Library for Maximum Concurrent Request Speed"
+readme = "README.md"
+requires-python = ">=3.11"
+license = {text = "MIT"}
+authors = [{name = "amroot"}]
+dependencies = []
+
+[project.urls]
+Homepage = "https://github.com/amroot/salvo"
+Repository = "https://github.com/amroot/salvo.git"
+Issues = "https://github.com/amroot/salvo/issues"
+
+[project.scripts]
+salvo = "salvo.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["salvo*"]
