@@ -12,7 +12,7 @@
   - [Detailed Logging & Analysis](#detailed-logging--analysis)
 - [Configuration](#%EF%B8%8F-configuration)
 - [Roadmap](#%EF%B8%8F-roadmap)
-- [What's in a Name?](#%EF%B8%8F-roadmap)
+- [What's in a Name?](#%EF%B8%8F-whats-in-a-name)
 - [Contributing](#contributing)
 - [License](#-license)
 
