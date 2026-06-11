@@ -4,25 +4,17 @@
 **Salvo** is a high-speed Python HTTP pipelining engine built for precision attack-surface testing and extreme throughput. By leveraging raw sockets and byte-level request assembly, it bypasses the overhead of traditional libraries to deliver tightly synchronized bursts of traffic -- ideal for race-condition discovery, high-volume load testing, and high-frequency API validation.
 
 ## 📖 Table of Contents
-- [Features](#features)
-- [Why Salvo?](#why-salvo)
-- [Installation](#installation)
-- [Quick Start](#quick-start)
-- [Core Concepts](#core-concepts)
-  - [Pipelining](#pipelining)
-  - [The Pipeline Object](#the-pipeline-object)
-- [CLI Usage](#cli-usage)
-- [Configuration](#configuration)
-- [Infrastructure & Testing](#infrastructure--testing)
+- [Features](#-features)
+- [Why Salvo?](#-why-salvo)
+- [Installation](#-installation)
+- [Quick Start](#-quick-start)
+- [Core Concepts](#-core-concepts)
+  - [Detailed Logging & Analysis](#detailed-logging--analysis)
+- [Configuration](#%EF%B8%8F-configuration)
+- [Roadmap](#%EF%B8%8F-roadmap)
+- [What's in a Name?](#%EF%B8%8F-roadmap)
 - [Contributing](#contributing)
-- [License](#license)
-
----
-
-## 🏷️ What's in a Name?
-In military terminology, a **Salvo** is a simultaneous discharge of artillery or firearms at a single target. 
-
-This project was named **Salvo** because it specializes in the "synchronized strike." While other tools send requests as fast as possible in a sequence, Salvo allows you to prime multiple connections, wait for them all to be ready, and then "pull the trigger" to release them at the exact same millisecond.
+- [License](#-license)
 
 ---
 
@@ -33,6 +25,8 @@ This project was named **Salvo** because it specializes in the "synchronized str
 - **Threaded Concurrency:** Distribute pipelined salvos across multiple connections for parallel execution.
 - **Precise Timing:** High-resolution latency tracking for every request in the salvo.
 - **Modular Design:** Clean separation of transport and protocol layers, ready for future HTTP/2 and HTTP/3 support.
+
+---
 
 ## ❓ Why Salvo?
 Most Python HTTP libraries (like `requests` or `httpx`) focus on developer ergonomics and compliance, which introduces overhead. Salvo is built for **speed**. It allows you to:
@@ -125,6 +119,8 @@ This file is optimized for analysis in Excel, Pandas, or custom security tools. 
 | `wordlist` | `-w` | `str` | N/A | Path to a file for `{FUZZ}` replacement. |
 | `race` | `N/A`| `bool`| `False` | Enable Gate/Barrier mode for synchronized firing. |
 
+---
+
 ## 🗺️ Roadmap
 Salvo is actively evolving to support modern web protocols while maintaining its performance-first philosophy.
 - [x] **HTTP/1.1 Pipelining Engine:** Core engine with raw socket control.
@@ -133,8 +129,17 @@ Salvo is actively evolving to support modern web protocols while maintaining its
 - [ ] **HTTP/3 (QUIC) Module:** UDP-based ultra-fast delivery.
 - [ ] **Automatic Protocol Negotiation (ALPN):** Seamlessly upgrade/downgrade based on target capability.
 
+## 🏷️ What's in a Name?
+In some terminology, a **Salvo** is a simultaneous discharge of artillery at a single target. 
+
+This project was named **Salvo** because it specializes in the "synchronized strike." While other tools send requests as fast as possible in a sequence, Salvo allows you to prime multiple connections, wait for them all to be ready, and then "pull the trigger" to release them at the exact same millisecond.
+
+---
+
 ## Contributing
 Contributions are welcome! Please see our [Contributing Guidelines](CONTRIBUTING.md) (coming soon) for details on our code of conduct and the process for submitting pull requests.
+
+---
 
 ## 📄 License
 This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) file for details.
