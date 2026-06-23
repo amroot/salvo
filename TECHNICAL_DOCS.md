@@ -58,7 +58,6 @@ The main entry point for library users.
 ### Prerequisites
 - **Python 3.11+**
 - **Git Bash** (Recommended for Windows users)
-- **Oracle OCI CLI** (Required for infrastructure management)
 
 ### Environment Setup
 1. Clone the repository:
