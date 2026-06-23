@@ -90,4 +90,5 @@ python -m unittest discover tests
 | `-H` | `--header` | Custom HTTP header (can be used multiple times). |
 | `-v` | `--verbose` | Output every response code and latency. |
 | `--race` | `N/A` | Enable Precision Mode (synchronized firing). |
+| `-a` | `--auto-fire` | Automatically release the salvo in race mode without waiting for prompt. |
 | `--no-log` | `N/A` | Skip TSV file generation. |

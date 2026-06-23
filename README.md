@@ -78,6 +78,12 @@ Salvo comes with a built-in CLI for rapid testing:
 # Basic usage (outputs a summary of response codes)
 salvo --url http://localhost:8000/ --count 100 --connections 10
 
+# Race mode: prime all connections before releasing simultaneously
+salvo --url http://localhost:8000/ --count 10 --connections 5 --race
+
+# Race mode without interactive prompt
+salvo --url http://localhost:8000/ --count 10 --connections 5 --race --auto-fire
+
 # Verbose usage (lists every request and response)
 salvo --url http://localhost:8000/ --verbose
 
@@ -116,8 +122,9 @@ This file is optimized for analysis in Excel, Pandas, or custom security tools. 
 | `header` | `-H` | `str` | N/A | Custom HTTP headers (can be used multiple times). |
 | `verbose` | `-v` | `bool` | `False` | List all responses with status codes and latency. |
 | `no-log` | `N/A`| `bool` | `False` | Disable generation of the detailed TSV log file. |
-| `wordlist` | `-w` | `str` | N/A | Path to a file for `{FUZZ}` replacement. |
 | `race` | `N/A`| `bool`| `False` | Enable Gate/Barrier mode for synchronized firing. |
+| `auto-fire` | `-a` | `bool` | `False` | Automatically release the salvo in race mode without waiting for prompt. |
+| `wordlist` | `-w` | `str` | N/A | Path to a file for `{FUZZ}` replacement. |
 
 ---
 
