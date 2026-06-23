@@ -81,5 +81,39 @@ class TestCLIIntegration(unittest.TestCase):
             if os.path.exists(wl_file):
                 os.remove(wl_file)
 
+    def test_cli_race_auto_fire(self):
+        test_args = ["salvo", "-u", self.url, "-n", "1", "--race", "--auto-fire", "--no-log"]
+        with patch.object(sys, 'argv', test_args):
+            with patch('sys.stdout', new=io.StringIO()) as fake_out:
+                main()
+                output = fake_out.getvalue()
+                self.assertIn("Firing 1 requests", output)
+                self.assertIn("200: 1", output)
+                self.assertIn("Auto-fire enabled, releasing the salvo immediately", output)
+
+    def test_cli_race_auto_fire_no_input(self):
+        class DummyPipeline:
+            def __init__(self, target_url, connections, gate):
+                self.requests = []
+            def add(self, req):
+                self.requests.append(req)
+            def fire(self):
+                return [(req, type("R", (), {"status": 200, "elapsed_ms": 1.0, "raw_response": b"OK", "start_time": 0, "end_time": 1})) for req in self.requests]
+            def release(self):
+                self.released = True
+
+        class DummyRequest:
+            def __init__(self, method, path, headers, body):
+                self.body = body
+
+        test_args = ["salvo", "-u", self.url, "-n", "1", "--race", "--auto-fire", "--no-log"]
+        with patch('salvo.core.pipeline.Pipeline', DummyPipeline), patch('salvo.protocols.h11.Request', DummyRequest):
+            with patch.object(sys, 'argv', test_args):
+                with patch('sys.stdout', new=io.StringIO()) as fake_out:
+                    main()
+                    output = fake_out.getvalue()
+                    self.assertIn("Firing 1 requests", output)
+                    self.assertIn("Auto-fire enabled, releasing the salvo immediately", output)
+
 if __name__ == "__main__":
     unittest.main()

@@ -20,6 +20,7 @@ def main():
     parser.add_argument("-v", "--verbose", action="store_true", help="Show all responses in detail")
     parser.add_argument("--no-log", action="store_true", help="Skip saving the detailed TSV output file")
     parser.add_argument("--race", action="store_true", help="Enable gate mode for race condition testing")
+    parser.add_argument("-a", "--auto-fire", action="store_true", help="Skip the interactive prompt in race mode and release immediately")
     
     args = parser.parse_args()
 
@@ -107,7 +108,10 @@ def main():
         t.start()
         
         print("[*] Waiting for all connections to be ready...")
-        input("[!] All connections primed. Press Enter to release the salvo...")
+        if not args.auto_fire:
+            input("[!] All connections primed. Press Enter to release the salvo...")
+        else:
+            print("[*] Auto-fire enabled, releasing the salvo immediately...")
         pipe.release()
         t.join()
     else:
