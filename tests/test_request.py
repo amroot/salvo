@@ -1,5 +1,5 @@
 import unittest
-from salvo.protocols.h11 import Request
+from salvo.protocols.h11 import Request, RequestTemplate
 
 class TestRequest(unittest.TestCase):
     def test_basic_get(self):
@@ -20,6 +20,12 @@ class TestRequest(unittest.TestCase):
         req = Request("GET", "/", headers={"X-Test": "Value"})
         raw = req.to_bytes("test.com")
         self.assertIn(b"X-Test: Value", raw)
+
+    def test_request_template_preserves_method(self):
+        request = RequestTemplate("POST", "http://example.com/{FUZZ}").render("item")
+
+        self.assertEqual(request.method, "POST")
+        self.assertEqual(request.path, "/item")
 
 if __name__ == "__main__":
     unittest.main()

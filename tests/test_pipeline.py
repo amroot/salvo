@@ -2,6 +2,7 @@ import unittest
 import threading
 import http.server
 import socketserver
+from unittest.mock import patch
 from salvo import Pipeline, Request
 
 class SilentHTTPRequestHandler(http.server.SimpleHTTPRequestHandler):
@@ -74,6 +75,44 @@ class TestPipelineIntegration(unittest.TestCase):
         self.assertEqual(len(all_res), 2)
         for req, res in all_res:
             self.assertEqual(res.status, 200)
+
+    def test_gate_mode_auto_fire(self):
+        pipe = Pipeline(self.url, connections=2, gate=True)
+        pipe.add(Request("GET", "/"))
+        pipe.add(Request("GET", "/"))
+
+        results = pipe.fire(auto_fire=True)
+
+        self.assertEqual(len(results), 2)
+        for req, res in results:
+            self.assertEqual(res.status, 200)
+
+    def test_gate_mode_auto_fire_returns_when_connection_priming_fails(self):
+        pipe = Pipeline(self.url, gate=True)
+        pipe.add(Request("GET", "/"))
+
+        with patch("salvo.core.pipeline.SocketWriter") as socket_writer:
+            socket_writer.return_value.__enter__.return_value.connect.side_effect = OSError
+            results = pipe.fire(auto_fire=True)
+
+        self.assertEqual(results, [(pipe.requests[0], None)])
+
+    def test_gate_mode_rearms_after_release(self):
+        pipe = Pipeline(self.url, connections=2, gate=True)
+        pipe.add(Request("GET", "/"))
+        pipe.add(Request("GET", "/"))
+
+        for _ in range(2):
+            results = []
+            thread = threading.Thread(target=lambda: results.extend(pipe.fire()))
+            thread.start()
+            self.assertTrue(pipe._ready_event.wait(timeout=5))
+            self.assertTrue(thread.is_alive())
+            pipe.release()
+            thread.join(timeout=5)
+
+            self.assertFalse(thread.is_alive())
+            self.assertEqual(len(results), 2)
 
 if __name__ == "__main__":
     unittest.main()

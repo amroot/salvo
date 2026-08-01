@@ -40,8 +40,21 @@ The main entry point for library users.
 #### `add(request)` / `add_many(requests)`
 - `request`: A `salvo.protocols.h11.Request` object.
 
-#### `fire()`
+#### `fire(auto_fire=False)`
 - **Returns**: `List[Tuple[Request, Response]]`.
+- When `gate=True`, workers wait after all connections reach the barrier.
+  Call `release()` from another thread to send the requests, or pass
+  `auto_fire=True` to release automatically once every connection is ready.
+
+  ```python
+  pipeline = Pipeline(url, connections=5, gate=True)
+  # Add requests...
+  results = pipeline.fire(auto_fire=True)
+  ```
+
+#### `release()`
+- Releases workers waiting at a gate. Use this only for manually controlled
+  gate mode; it may be called before workers reach the gate.
 
 #### `results_to_dict(results)`
 - Converts results into a JSON-serializable list of dictionaries including base64 encoded data.

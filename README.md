@@ -68,9 +68,26 @@ results = pipe.fire()
 
 # 4. Process results
 print(f"Received {len(results)} responses.")
-for res in results[:3]:
+for _, res in results[:3]:
     print(f"Status: {res.status}, Latency: {res.elapsed_ms:.2f}ms")
 ```
+
+### Gate Mode (Race Testing)
+
+Pass `gate=True` to synchronize all connections before they send. Use
+`auto_fire=True` to release automatically once every connection is ready:
+
+```python
+pipe = Pipeline("http://localhost:8000/", connections=5, gate=True)
+for _ in range(10):
+    pipe.add(Request("GET", "/"))
+
+results = pipe.fire(auto_fire=True)
+```
+
+For manual release, run `fire()` in one thread and call `pipe.release()` from
+another after the connections are ready. `fire()` intentionally waits at the
+gate until it is released.
 
 ### Using the CLI
 Salvo comes with a built-in CLI for rapid testing:
@@ -123,7 +140,7 @@ This file is optimized for analysis in Excel, Pandas, or custom security tools. 
 | `verbose` | `-v` | `bool` | `False` | List all responses with status codes and latency. |
 | `no-log` | `N/A`| `bool` | `False` | Disable generation of the detailed TSV log file. |
 | `race` | `N/A`| `bool`| `False` | Enable Gate/Barrier mode for synchronized firing. |
-| `auto-fire` | `-a` | `bool` | `False` | Automatically release the salvo in race mode without waiting for prompt. |
+| `auto-fire` | `-a` | `bool` | `False` | Automatically release the salvo once all race-mode connections are ready. |
 | `wordlist` | `-w` | `str` | N/A | Path to a file for `{FUZZ}` replacement. |
 
 ---

@@ -99,7 +99,7 @@ def main():
     print(f"[*] Firing {len(pipe.requests)} requests at {target_url}...")
     
     results = []
-    if args.race:
+    if args.race and not args.auto_fire:
         import threading
         def run_fire():
             results.extend(pipe.fire())
@@ -110,10 +110,11 @@ def main():
         print("[*] Waiting for all connections to be ready...")
         if not args.auto_fire:
             input("[!] All connections primed. Press Enter to release the salvo...")
-        else:
-            print("[*] Auto-fire enabled, releasing the salvo immediately...")
         pipe.release()
         t.join()
+    elif args.race:
+        print("[*] Auto-fire enabled, releasing the salvo when all connections are ready...")
+        results = pipe.fire(auto_fire=True)
     else:
         results = pipe.fire()
 

@@ -89,7 +89,7 @@ class TestCLIIntegration(unittest.TestCase):
                 output = fake_out.getvalue()
                 self.assertIn("Firing 1 requests", output)
                 self.assertIn("200: 1", output)
-                self.assertIn("Auto-fire enabled, releasing the salvo immediately", output)
+                self.assertIn("Auto-fire enabled, releasing the salvo when all connections are ready", output)
 
     def test_cli_race_auto_fire_no_input(self):
         class DummyPipeline:
@@ -97,7 +97,7 @@ class TestCLIIntegration(unittest.TestCase):
                 self.requests = []
             def add(self, req):
                 self.requests.append(req)
-            def fire(self):
+            def fire(self, auto_fire=False):
                 return [(req, type("R", (), {"status": 200, "elapsed_ms": 1.0, "raw_response": b"OK", "start_time": 0, "end_time": 1})) for req in self.requests]
             def release(self):
                 self.released = True
@@ -113,7 +113,7 @@ class TestCLIIntegration(unittest.TestCase):
                     main()
                     output = fake_out.getvalue()
                     self.assertIn("Firing 1 requests", output)
-                    self.assertIn("Auto-fire enabled, releasing the salvo immediately", output)
+                    self.assertIn("Auto-fire enabled, releasing the salvo when all connections are ready", output)
 
 if __name__ == "__main__":
     unittest.main()

@@ -35,6 +35,7 @@ class RequestTemplate:
         from urllib.parse import urlparse
         parsed = urlparse(url_template)
         self.host = parsed.hostname
+        self.method = method
         self.path_template = parsed.path + ("?" + parsed.query if parsed.query else "")
         self.headers = headers or {}
         self.body_template = body_template or ""
@@ -51,7 +52,7 @@ class RequestTemplate:
         # but the infrastructure is here for the split-byte optimization.
         path = self.path_template.replace("{FUZZ}", payload)
         body = self.body_template.replace("{FUZZ}", payload) if self.body_template else None
-        return Request("GET", path, headers=self.headers, body=body)
+        return Request(self.method, path, headers=self.headers, body=body)
 
 class Response:
     def __init__(self, status, headers, body, elapsed_ms, raw_response=b"", start_time=0, end_time=0):
